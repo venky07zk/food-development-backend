@@ -3,7 +3,9 @@ package foodapp.demo;
 public enum OrderStatus {
     PLACED,
     PREPARING,
+    PENDING,
     OUT_FOR_DELIVERY,
     DELIVERED,
-    CANCELLED
+    CANCELLED,
+    PAID
 }

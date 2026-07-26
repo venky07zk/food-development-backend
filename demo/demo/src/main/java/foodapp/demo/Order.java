@@ -19,6 +19,9 @@ public class Order {
     private User user;
     @OneToMany(mappedBy="order",cascade=CascadeType.ALL)
     private List<OrderItem> orderItems;
+    @ManyToOne
+    @JoinColumn(name="restaurent_id")
+    private Restaurent restaurant;
 
     public OrderStatus getStatus() {
         return status;
@@ -60,7 +63,61 @@ public class Order {
         this.id = id;
     }
 
+    public String getRazorpayOrderId() {
+        return razorpayOrderId;
+    }
+
+    public void setRazorpayOrderId(String razorpayOrderId) {
+        this.razorpayOrderId = razorpayOrderId;
+    }
+
+    public String getRazorpayPaymentId() {
+        return razorpayPaymentId;
+    }
+
+    public void setRazorpayPaymentId(String razorpayPaymentId) {
+        this.razorpayPaymentId = razorpayPaymentId;
+    }
+
+    public Restaurent getRestaurant() {
+        return restaurant;
+    }
+
+    public void setRestaurant(Restaurent restaurant) {
+        this.restaurant = restaurant;
+    }
+
     private double amount;
     @Enumerated(EnumType.STRING)
     private OrderStatus status;
+    private String razorpayOrderId;
+    @Enumerated(EnumType.STRING)
+    private PaymentStatus paymentStatus;
+    private String razorpayPaymentId;
+    private double latitude;
+    private double longitude;
+
+    public double getLatitude() {
+        return latitude;
+    }
+
+    public double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
+    }
+
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
+    }
+
+    public PaymentStatus getPaymentStatus() {
+        return paymentStatus;
+    }
+
+    public void setPaymentStatus(PaymentStatus paymentStatus) {
+        this.paymentStatus = paymentStatus;
+    }
 }

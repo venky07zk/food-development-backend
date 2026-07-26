@@ -3,6 +3,7 @@ package foodapp.demo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
+import java.io.Serializable;
 import java.util.List;
 
 @Entity
@@ -15,6 +16,33 @@ public class Restaurent {
     private int id;
     private String name;
     private  String location;
+    private double latitude;
+    private double longitude;
+    private double deliveryRadius;
+
+    public double getDeliveryRadius() {
+        return deliveryRadius;
+    }
+
+    public void setDeliveryRadius(double deliveryRadius) {
+        this.deliveryRadius = deliveryRadius;
+    }
+
+    public double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
+    }
+
+    public double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
+    }
 
     public List<FoodItems> getFoodItems() {
         return foodItems;

@@ -12,6 +12,11 @@ public class User {
     private int id;
     private String username;
     private String password;
+    private String phoneNumber;
+    private boolean phoneVerified;
+
+
+
     @OneToMany(mappedBy = "user")
     @JsonIgnore
     private List<Order> orders;
@@ -50,6 +55,30 @@ public class User {
     private String role;
     @OneToOne(mappedBy = "user")
     private Cart cart;
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public boolean isPhoneVerified() {
+        return phoneVerified;
+    }
+
+    public void setPhoneVerified(boolean phoneVerified) {
+        this.phoneVerified = phoneVerified;
+    }
+
+    public List<Order> getOrders() {
+        return orders;
+    }
+
+    public void setOrders(List<Order> orders) {
+        this.orders = orders;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
 
     public Cart getCart() {
         return cart;

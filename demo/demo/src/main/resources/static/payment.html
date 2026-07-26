@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Razorpay Test</title>
+</head>
+<body>
+
+<h2>Food App Payment</h2>
+
+<button onclick="payNow()">Pay Now</button>
+
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+<script>
+    const token = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ2ZW5reSIsImlhdCI6MTc4NDgwODYzNSwiZXhwIjoxNzg0ODEyMjM1fQ.8DG-zGkhL4MFubVIiHjo0ZWmzlNi-awe0SnHfbI1nQc";
+
+    async function payNow() {
+        const response = await fetch("/placeorder", {
+
+            method: "POST",
+
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": "Bearer " + token
+            },
+            body: JSON.stringify({
+                customerlatitude: 17.4405,
+                customerlongitude: 78.4978,
+                deliveryInstructions: "No instructions"
+            })
+
+        });
+
+        console.log(response.status);
+
+        const text = await response.text();
+
+        console.log(text);
+
+        const data = JSON.parse(text);
+
+        console.log(data);
+        console.log("orderId =", data.orderId);
+        console.log("orderid =", data.orderid);
+        console.log("razorpayorderid =", data.razorpayorderid);
+
+        var options = {
+
+            key: "rzp_test_TDTuNXal4lr4L5",
+
+            amount: data.amount * 100,
+
+            currency: data.currency,
+
+            name: "Food App",
+
+            description: "Food Order Payment",
+
+            order_id: data.razorpayorderid,
+
+            handler: async function (response) {
+
+                console.log("Payment Response:", response);
+                console.log("Payment ID:", response.razorpay_payment_id);
+                console.log("Order ID:", response.razorpay_order_id);
+                console.log("Signature:", response.razorpay_signature);
+
+                const verifyResponse = await fetch("/payment/verify", {
+
+                    method: "POST",
+
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": "Bearer " + token
+                    },
+
+                    body: JSON.stringify({
+
+                        orderId: data.orderid,
+                        razorpayOrderId: response.razorpay_order_id,
+                        razorpayPaymentId: response.razorpay_payment_id,
+                        razorpaySignature: response.razorpay_signature
+
+                    })
+
+                });
+
+                const result = await verifyResponse.text();
+
+                console.log(result);
+
+            }
+
+        };
+
+        var rzp = new Razorpay(options);
+
+        rzp.open();
+    }
+</script>
+
+</body>
+</html>

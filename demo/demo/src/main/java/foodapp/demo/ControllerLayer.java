@@ -1,5 +1,6 @@
 package foodapp.demo;
 
+import com.razorpay.RazorpayException;
 import io.swagger.v3.oas.annotations.Operation;
 import java.nio.file.Path;
 
@@ -20,9 +21,49 @@ import java.util.List;
 @RestController
 public class ControllerLayer {
     @Autowired
+    smsService smsservice;
+    @Autowired
     ServiceLayer s;
     @Autowired
     private RestaurentRepository restaurentRepository;
+    @Autowired
+    private PaymentService paymentservice;
+    @CrossOrigin(origins="*")
+    @RestController
+    public class AuthController
+    {
+
+    }
+    @PostMapping("/payment/verify")
+    public ResponseEntity<String> verifypayment(@RequestBody paymentVerifyDTO dto) throws RazorpayException
+    {
+        boolean verified= paymentservice.verifypayment(dto);
+        if(!verified)
+        {
+            return ResponseEntity.badRequest().body("Payment verification failed");
+        }
+        return ResponseEntity.ok().body("Payment verified");
+    }
+    @GetMapping("/payment")
+    public String payment() throws RazorpayException {
+        return paymentservice.createOrder(590000);
+    }
+    @GetMapping("/call")
+    public String testcall() throws Exception{
+        smsservice.callOtp("+917013555266");
+        return "calling..";
+    }
+    @PostMapping("/send-otp")
+    public ResponseEntity<String> sendOtp(@RequestParam String phoneNumber)
+    {
+        return s.sendOtp(phoneNumber);
+    }
+    @PostMapping("/verify-otp")
+    public ResponseEntity<String> verifyOtp(@RequestBody VerifyOtpDto dto)
+    {
+        return s.verifyOtp(dto);
+    }
+
     @GetMapping("/orders/myorders/{id}")
     public ResponseEntity<?> myorder(@PathVariable int id)
     {
@@ -89,7 +130,7 @@ public class ControllerLayer {
     @GetMapping("/searchmenu")
     public ResponseEntity<List<FoodItems>> search(@RequestParam int id)
     {
-        return s.menu(id);
+        return ResponseEntity.ok(s.menu(id));
     }
     @Operation(summary="post food items")
     @PostMapping("/FoodItems")
@@ -133,9 +174,9 @@ public class ControllerLayer {
     }
     @Transactional
     @PostMapping("/placeorder")
-    public ResponseEntity<String> placeorder()throws RuntimeException
+    public ResponseEntity<paymentResponseDTO> placeorder(@RequestBody placeOrderDTO dto)throws RuntimeException
     {
-        return s.placeorder();
+        return s.placeorder(dto);
     }
 
 }
